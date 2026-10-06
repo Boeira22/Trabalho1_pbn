@@ -13,6 +13,17 @@
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Run bagunceitor (predio32)",
+            "type": "shell",
+            "command": ".\\bagunceitor.exe",
+            "args": [".\\predio32.jpg"],
+            "options": {
+                "cwd": "${workspaceFolder}/bagunceitor"
+            },
+            "dependsOn": "Build bagunceitor",
+            "problemMatcher": []
         }
     ]
 }

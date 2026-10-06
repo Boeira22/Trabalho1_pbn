@@ -1,35 +1,16 @@
-/*
+// para exec:
+// .\bagunceitor.exe .\predio32.jpg OU .\bagunceitor.exe .\mercadoPublico.jpg
 
-Para compilar de dentro do VS Code:
-
-Windows/Linux: CTRL+SHIFT+B (Terminal -> Run Build Task)
-macOS: COMMAND+SHIFT+B
-
-Para executar de dentro do VS Code:
-
-Executar normalmente: CTRL+F5 (Run -> Run Without Debugging)
-Debugar: F5 (Run -> Start Debugging)
-
-Pelo terminal:
-
-Windows: mingw32-make
-Linux/macOS: make
-
-Para executar:
-
-./bagunceitor [arquivo com a imagem de entrada]
-
-*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>  // Para usar strings
+#include <string.h>  
 #include <time.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
-#include <stb_image.h>
 #include <stb_image_write.h>
+#include <stb_image.h>
 
 // Um pixel Pixel (24 bits)
 typedef struct {
@@ -39,11 +20,11 @@ typedef struct {
 // Uma imagem Pixel
 typedef struct {
   int width, height;  // largura, altura
-  int channels;       // qtd de canais (geralmente 3, RGB)
+  int channels;       // qtd de canais (3 , R G B)
   Pixel* pixels;
 } Img;
 
-// As 2 imagens
+// As 2 imagens, entrada (que vai ser alterada) saída (que vai receber a entrada modificada)
 Img in, out;
 
 // Protótipos
@@ -69,23 +50,26 @@ int main(int argc, char* argv[]) {
   out.pixels = malloc(tam * sizeof(Pixel));
   memset(out.pixels, 0, tam * sizeof(Pixel));
 
-  // Converte para interpretar como matrizes
-  Pixel(*pin)[in.width] = (Pixel(*)[in.height])in.pixels;
-  Pixel(*pout)[in.width] = (Pixel(*)[in.height])out.pixels;
+  // Converte para interpretar como matrizes, 2D linha x coluna
+  Pixel(*pin)[in.width] = (Pixel(*)[in.width])in.pixels;
+  Pixel(*pout)[in.width] = (Pixel(*)[in.width])out.pixels;
 
-  //
-  // Neste ponto, voce deve implementar os seus algoritmos!
-  // (ou chamar funcoes para fazer isso)
-  //
-  // Aplica o algoritmo em pin e gera a saida em pout
-  // ...
-  //
   // Exemplo: inverte as cores
-  for (int i = 0; i < in.height; i++) {
-    for (int j = 0; j < in.width; j++) {
+  for (int i = 0; i < in.height; i++) { //linha
+    for (int j = 0; j < in.width; j++) { //coluna
+      /*
       pout[i][j].r = 255 - pin[i][j].r;
       pout[i][j].g = 255 - pin[i][j].g;
       pout[i][j].b = 255 - pin[i][j].b;
+      */
+
+      //pout[i][j].r = pin[i][j].r - pin[i][j].r;
+      //pout[i][j].g = pin[i][j].g - pin[i][j].g;
+      //pout[i][j].b = pin[i][j].b - pin[i][j].b;
+
+      pout[i][j].r = pin[i][j].r - ((pin[i][j].r)*5);
+      pout[i][j].g = pin[i][j].g - ((pin[i][j].g)*10);
+      pout[i][j].b = pin[i][j].b - ((pin[i][j].b)*2);
     }
   }
 
