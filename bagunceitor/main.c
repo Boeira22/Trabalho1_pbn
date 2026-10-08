@@ -11,6 +11,7 @@
 #define STBI_FAILURE_USERMSG
 #include <stb_image_write.h>
 #include <stb_image.h>
+#include <math.h>
 
 // Um pixel Pixel (24 bits)
 typedef struct {
@@ -57,19 +58,15 @@ int main(int argc, char* argv[]) {
   // Exemplo: inverte as cores
   for (int i = 0; i < in.height; i++) { //linha
     for (int j = 0; j < in.width; j++) { //coluna
-      /*
-      pout[i][j].r = 255 - pin[i][j].r;
-      pout[i][j].g = 255 - pin[i][j].g;
-      pout[i][j].b = 255 - pin[i][j].b;
-      */
 
-      //pout[i][j].r = pin[i][j].r - pin[i][j].r;
-      //pout[i][j].g = pin[i][j].g - pin[i][j].g;
-      //pout[i][j].b = pin[i][j].b - pin[i][j].b;
+      pout[i][j].r = pin[i][j].r ^ 113;
+      pout[i][j].g = pin[i][j].g ^ 2017;
+      pout[i][j].b = pin[i][j].b ^ 1995;
 
-      pout[i][j].r = pin[i][j].r - ((pin[i][j].r)*5);
-      pout[i][j].g = pin[i][j].g - ((pin[i][j].g)*10);
-      pout[i][j].b = pin[i][j].b - ((pin[i][j].b)*2);
+      pout[i][j].r = pout[i][j].r + (i * 15) + (j * 3);
+      pout[i][j].g = pout[i][j].g + (i * 23) + (j * 5);
+      pout[i][j].b = pout[i][j].b + (i * 7) + (j);
+
     }
   }
 
@@ -97,3 +94,14 @@ void load(char* name, Img* pic) {
     printf("\n");
   }
 }
+
+/*
+void voltar()
+      pout[i][j].r = pin[i][j].r ^ 113;
+      pout[i][j].g = pin[i][j].g ^ 2017;
+      pout[i][j].b = pin[i][j].b ^ 1995;
+
+      pout[i][j].r = pout[i][j].b + (i * 15) + (j * 3);
+      pout[i][j].g = pout[i][j].r + (i * 23) + (j * 5);
+      pout[i][j].b = pout[i][j].g + (i * 7) + (j);
+*/
