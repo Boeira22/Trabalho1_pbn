@@ -30,6 +30,8 @@ Img in, out;
 
 // Protótipos
 void load(char* name, Img* pic);
+void confundir(Pixel* src, Pixel* dst, int w, int h);
+void difundir(Pixel* src, Pixel* dst, int w, int h);
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
@@ -46,29 +48,16 @@ int main(int argc, char* argv[]) {
   printf("Processando...\n");
 
   // Cria imagem de saída e "zera" ela
-  int tam = in.width * in.height;
+  int tam = in.width * in.height; //quantos pixels a imagem tem
   out = in;
-  out.pixels = malloc(tam * sizeof(Pixel));
-  memset(out.pixels, 0, tam * sizeof(Pixel));
+  out.pixels = malloc(tam * sizeof(Pixel)); // pede pra memoria pelo tamanho de pixels
+  memset(out.pixels, 0, tam * sizeof(Pixel)); // preenche cm 0
 
-  // Converte para interpretar como matrizes, 2D linha x coluna
   Pixel(*pin)[in.width] = (Pixel(*)[in.width])in.pixels;
   Pixel(*pout)[in.width] = (Pixel(*)[in.width])out.pixels;
 
-  // Exemplo: inverte as cores
-  for (int i = 0; i < in.height; i++) { //linha
-    for (int j = 0; j < in.width; j++) { //coluna
-
-      pout[i][j].r = pin[i][j].r ^ 113;
-      pout[i][j].g = pin[i][j].g ^ 2017;
-      pout[i][j].b = pin[i][j].b ^ 1995;
-
-      pout[i][j].r = pout[i][j].r + (i * 15) + (j * 3);
-      pout[i][j].g = pout[i][j].g + (i * 23) + (j * 5);
-      pout[i][j].b = pout[i][j].b + (i * 7) + (j);
-
-    }
-  }
+  confundir(in.pixels, out.pixels, in.width, in.height); // src, dst, w, h
+  difundir(in.pixels, out.pixels, in.width, in.height);
 
   // Grava a imagem como PNG para registro
   stbi_write_png("saida.png", out.width, out.height, 3, pout, 0);
@@ -76,6 +65,31 @@ int main(int argc, char* argv[]) {
   free(in.pixels);
   free(out.pixels);
 }
+
+void confundir(Pixel* src, Pixel* dst, int w, int h){
+  Pixel(*pin)[in.width] = (Pixel(*)[in.width])in.pixels;
+  Pixel(*pout)[in.width] = (Pixel(*)[in.width])out.pixels;
+    for (int i = 0; i < h; i++) { //linha
+    for (int j = 0; j < w; j++) { //coluna
+      pout[i][j].r = pin[i][j].r ^ 113;
+      pout[i][j].g = pin[i][j].g ^ 2017;
+      pout[i][j].b = pin[i][j].b ^ 1995;
+    }
+  }
+}
+
+void difundir(Pixel* src, Pixel* dst, int w, int h){
+  Pixel(*pin)[in.width] = (Pixel(*)[w])src;
+  Pixel(*pout)[in.width] = (Pixel(*)[w])dst;
+    for (int i = 0; i < h; i++) { //linha
+    for (int j = 0; j < w; j++) { //coluna
+      pout[i][j].r = pin[i][j].r + (i * 15) + (j * 3);
+      pout[i][j].g = pin[i][j].g + (i * 23) + (j * 5); 
+      pout[i][j].b = pin[i][j].b + (i * 7) + (j);
+    }
+  }
+}
+
 
 void load(char* name, Img* pic) {
   pic->pixels =
