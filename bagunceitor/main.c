@@ -67,25 +67,23 @@ int main(int argc, char* argv[]) {
 }
 
 void confundir(Pixel* src, Pixel* dst, int w, int h){
-  Pixel(*pin)[in.width] = (Pixel(*)[in.width])in.pixels;
-  Pixel(*pout)[in.width] = (Pixel(*)[in.width])out.pixels;
+  Pixel(*pin)[w] = (Pixel(*)[w])src; //cast
+  Pixel(*pout)[w] = (Pixel(*)[w])dst; //cast
     for (int i = 0; i < h; i++) { //linha
     for (int j = 0; j < w; j++) { //coluna
       pout[i][j].r = pin[i][j].r ^ 113;
-      pout[i][j].g = pin[i][j].g ^ 2017;
-      pout[i][j].b = pin[i][j].b ^ 1995;
+      pout[i][j].g = pin[i][j].g ^ 50;
+      pout[i][j].b = pin[i][j].b ^ 222;
     }
   }
 }
 
 void difundir(Pixel* src, Pixel* dst, int w, int h){
-  Pixel(*pin)[in.width] = (Pixel(*)[w])src;
-  Pixel(*pout)[in.width] = (Pixel(*)[w])dst;
+  Pixel(*pin)[w] = (Pixel(*)[w])src;
+  Pixel(*pout)[w] = (Pixel(*)[w])dst;
     for (int i = 0; i < h; i++) { //linha
     for (int j = 0; j < w; j++) { //coluna
-      pout[i][j].r = pin[i][j].r + (i * 15) + (j * 3);
-      pout[i][j].g = pin[i][j].g + (i * 23) + (j * 5); 
-      pout[i][j].b = pin[i][j].b + (i * 7) + (j);
+      pout[i][j] = pin[i*2][j*5];
     }
   }
 }
