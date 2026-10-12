@@ -26,7 +26,7 @@ typedef struct {
 } Img;
 
 // As 2 imagens, entrada (que vai ser alterada) saída (que vai receber a entrada modificada)
-Img in, out;
+Img in, out, aux;
 
 // Protótipos
 void load(char* name, Img* pic);
@@ -53,22 +53,23 @@ int main(int argc, char* argv[]) {
   out.pixels = malloc(tam * sizeof(Pixel)); // pede pra memoria pelo tamanho de pixels
   memset(out.pixels, 0, tam * sizeof(Pixel)); // preenche cm 0
 
-  Pixel(*pin)[in.width] = (Pixel(*)[in.width])in.pixels;
-  Pixel(*pout)[in.width] = (Pixel(*)[in.width])out.pixels;
+  aux = in;
+  aux.pixels = malloc(tam * sizeof(Pixel));
 
-  confundir(in.pixels, out.pixels, in.width, in.height); // src, dst, w, h
-  difundir(in.pixels, out.pixels, in.width, in.height);
+  confundir(in.pixels, aux.pixels, in.width, in.height); // original manda pro aux
+  difundir(aux.pixels, out.pixels, in.width, in.height); // aux manda pra saida
 
   // Grava a imagem como PNG para registro
-  stbi_write_png("saida.png", out.width, out.height, 3, pout, 0);
+  stbi_write_png("saida.png", out.width, out.height, 3, out.pixels, 0);
 
   free(in.pixels);
   free(out.pixels);
+  free(aux.pixels);
 }
 
 void confundir(Pixel* src, Pixel* dst, int w, int h){
-  Pixel(*pin)[w] = (Pixel(*)[w])src; //cast
-  Pixel(*pout)[w] = (Pixel(*)[w])dst; //cast
+  Pixel(*pin)[w] = (Pixel(*)[w])src; //cast (src = onde ler)
+  Pixel(*pout)[w] = (Pixel(*)[w])dst; //cast (dst = onde escrever)
     for (int i = 0; i < h; i++) { //linha
     for (int j = 0; j < w; j++) { //coluna
       pout[i][j].r = pin[i][j].r ^ 113;
