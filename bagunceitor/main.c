@@ -83,11 +83,18 @@ void difundir(Pixel* src, Pixel* dst, int w, int h){
   Pixel(*pout)[w] = (Pixel(*)[w])dst;
     for (int i = 0; i < h; i++) { //linha
     for (int j = 0; j < w; j++) { //coluna
-      pout[i][j] = pin[i*2][j*5];
+      pout[i][j] = pin[i][(j+i*2)%w];
     }
   }
 }
 
+void desconfundir(){
+
+}
+
+void desdifundir(){
+  //[i][(j - i*2)%w];
+}
 
 void load(char* name, Img* pic) {
   pic->pixels =
