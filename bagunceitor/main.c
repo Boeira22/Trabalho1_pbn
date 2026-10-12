@@ -26,12 +26,14 @@ typedef struct {
 } Img;
 
 // As 2 imagens, entrada (que vai ser alterada) saída (que vai receber a entrada modificada)
-Img in, out, aux;
+Img in, out, aux, reversa;
 
 // Protótipos
 void load(char* name, Img* pic);
 void confundir(Pixel* src, Pixel* dst, int w, int h);
 void difundir(Pixel* src, Pixel* dst, int w, int h);
+void desconfundir(Pixel* src, Pixel* dst, int w, int h);
+void desdifundir(Pixel* src, Pixel* dst, int w, int h);
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
@@ -53,18 +55,26 @@ int main(int argc, char* argv[]) {
   out.pixels = malloc(tam * sizeof(Pixel)); // pede pra memoria pelo tamanho de pixels
   memset(out.pixels, 0, tam * sizeof(Pixel)); // preenche cm 0
 
-  aux = in;
+  aux = in; //buffer auxiliar
   aux.pixels = malloc(tam * sizeof(Pixel));
+
+  reversa = in;
+  reversa.pixels = malloc(tam * sizeof(Pixel));
 
   confundir(in.pixels, aux.pixels, in.width, in.height); // original manda pro aux
   difundir(aux.pixels, out.pixels, in.width, in.height); // aux manda pra saida
 
+  desconfundir(out.pixels, aux.pixels, out.width, out.height);
+  desdifundir(aux.pixels, reversa.pixels, out.width, out.height);
+
   // Grava a imagem como PNG para registro
   stbi_write_png("saida.png", out.width, out.height, 3, out.pixels, 0);
+  stbi_write_png("saidaReversa.png", reversa.width, reversa.height, 3, reversa.pixels, 0);
 
   free(in.pixels);
   free(out.pixels);
   free(aux.pixels);
+  free(reversa.pixels);
 }
 
 void confundir(Pixel* src, Pixel* dst, int w, int h){
@@ -89,12 +99,26 @@ void difundir(Pixel* src, Pixel* dst, int w, int h){
   }
 }
 
-void desconfundir(){
-
+void desconfundir(Pixel* src, Pixel* dst, int w, int h){
+  Pixel(*pin)[w] = (Pixel(*)[w])src; //cast 
+  Pixel(*pout)[w] = (Pixel(*)[w])dst; 
+    for (int i = 0; i < h; i++) { //linha
+    for (int j = 0; j < w; j++) { //coluna
+      pout[i][j].r = pin[i][j].r ^ 113; //aplicar dnv volta 
+      pout[i][j].g = pin[i][j].g ^ 50;
+      pout[i][j].b = pin[i][j].b ^ 222;
+    }
+  }
 }
 
-void desdifundir(){
-  //[i][(j - i*2)%w];
+void desdifundir(Pixel* src, Pixel* dst, int w, int h){
+   Pixel(*pin)[w] = (Pixel(*)[w])src; //cast
+  Pixel(*pout)[w] = (Pixel(*)[w])dst;
+    for (int i = 0; i < h; i++) { //linha
+    for (int j = 0; j < w; j++) { //coluna
+      pout[i][(j+i*2)%w] = pin[i][j];
+    }
+  }
 }
 
 void load(char* name, Img* pic) {
