@@ -64,8 +64,10 @@ int main(int argc, char* argv[]) {
   confundir(in.pixels, aux.pixels, in.width, in.height); // original manda pro aux
   difundir(aux.pixels, out.pixels, in.width, in.height); // aux manda pra saida
 
-  desconfundir(out.pixels, aux.pixels, out.width, out.height);
-  desdifundir(aux.pixels, reversa.pixels, out.width, out.height);
+  desdifundir(out.pixels, aux.pixels, out.width, out.height);
+  desconfundir(aux.pixels, reversa.pixels, out.width, out.height);
+
+  // falta a verificação de reversibilidade (parte do Ortiz)  
 
   // Grava a imagem como PNG para registro
   stbi_write_png("saida.png", out.width, out.height, 3, out.pixels, 0);
