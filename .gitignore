@@ -1,0 +1,4 @@
+# Gerados pela compilação
+*.exe
+*.o
+output/
