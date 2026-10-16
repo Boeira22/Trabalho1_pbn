@@ -67,7 +67,11 @@ int main(int argc, char* argv[]) {
   desdifundir(out.pixels, aux.pixels, out.width, out.height);
   desconfundir(aux.pixels, reversa.pixels, out.width, out.height);
 
-  // falta a verificação de reversibilidade (parte do Ortiz)  
+  // Verificação de reversibilidade: compara byte a byte a original com a recuperada
++  if (memcmp(in.pixels, reversa.pixels, tam * sizeof(Pixel)) == 0)
++    printf("Reversibilidade OK: imagem recuperada identica a original\n");
++  else
++    printf("ERRO: imagem recuperada difere da original\n");
 
   // Grava a imagem como PNG para registro
   stbi_write_png("saida.png", out.width, out.height, 3, out.pixels, 0);
